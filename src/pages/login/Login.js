@@ -1,4 +1,12 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Slide,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,35 +16,53 @@ function Login() {
     username: "",
     password: "",
   });
+  const [alert, setAlert] = useState({ message: "", severity: "" });
+  const [open, setOpen] = useState(false);
 
-  const handleLoginForm = (e) => {
+  // Filling login form
+  const handleFieldChange = (event) => {
+    const { name, value } = event.target;
     setLoginForm({
       ...loginForm,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
-  const submitLoginForm = (e) => {
-    e.preventDefault();
-    const userLoginInfo = Object.values(loginForm);
-    if (userLoginInfo.some((value) => value === "")) {
-      alert("Fields cannot be empty");
-    } else if (
-      loginForm.username === "John" &&
-      loginForm.password === "12345"
-    ) {
+  // Form submission
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const { username, password } = loginForm;
+
+    if (!username || !password) {
+      setOpen(true);
+      setAlert({ message: "Fields cannot be empty.", severity: "error" });
+    } else if (username === "John" && password === "12345") {
       navigate("/home");
     } else {
-      // Need to alert wrong user login info
+      setOpen(true);
+      setAlert({
+        message: "Username and password do not match.",
+        severity: "warning",
+      });
     }
   };
+
+  // Close alert message
+  const handleClose = () => {
+    setOpen(false);
+    setAlert({ message: "", severity: "" });
+  };
+
+  function SlideTransition(props) {
+    return <Slide {...props} direction="down" />;
+  }
 
   return (
     <div>
       <Box
         component="form"
         method="post"
-        onSubmit={submitLoginForm}
+        onSubmit={handleSubmit}
         display="flex"
         flexDirection="column"
         alignItems="center"
@@ -58,7 +84,7 @@ function Login() {
           size="small"
           margin="dense"
           value={loginForm.username}
-          onChange={handleLoginForm}
+          onChange={handleFieldChange}
         />
         <TextField
           label="Password"
@@ -68,7 +94,7 @@ function Login() {
           size="small"
           margin="dense"
           value={loginForm.password}
-          onChange={handleLoginForm}
+          onChange={handleFieldChange}
         />
         <Button
           variant="contained"
@@ -79,6 +105,21 @@ function Login() {
           Login
         </Button>
       </Box>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        TransitionComponent={SlideTransition}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
