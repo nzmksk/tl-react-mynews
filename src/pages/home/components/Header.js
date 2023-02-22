@@ -6,16 +6,9 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
+import { Search as SearchIcon } from "@mui/icons-material";
 
-function Header() {
-  const [searchKeyword, setSearchKeyword] = useState("");
-
-  const searchTermHandler = (event) => {
-    setSearchKeyword(event.target.value);
-  };
-
+function Header(props) {
   return (
     <Grid container direction={"row"}>
       <Grid item lg={9}>
@@ -24,8 +17,8 @@ function Header() {
           label="Search for news"
           type="search"
           size="small"
-          value={searchKeyword}
-          onChange={searchTermHandler}
+          value={props.searchKeyword}
+          onChange={props.searchKeywordHandler}
         />
         <IconButton
           aria-label="Search news"

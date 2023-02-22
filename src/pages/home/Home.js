@@ -1,7 +1,14 @@
 import { Grid } from "@mui/material";
+import { useState } from "react";
 import Header from "./components/Header";
 
 function Home() {
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const searchKeywordHandler = (event) => {
+    setSearchKeyword(event.target.value);
+  };
+
   return (
     <Grid container className="main-container" direction={"column"}>
       <Grid
@@ -10,7 +17,10 @@ function Home() {
         lg={1}
         style={{ maxHeight: "10vh" }}
       >
-        <Header />
+        <Header
+          searchKeyword={searchKeyword}
+          searchKeywordHandler={searchKeywordHandler}
+        />
       </Grid>
       <Grid className="content-container" item lg={11}>
         <Grid container direction={"row"} style={{ height: "100%" }}>
