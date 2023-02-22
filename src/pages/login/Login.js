@@ -11,7 +11,6 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
 function Login() {
-  const LOCAL_STORAGE_KEY = "USER";
   const navigate = useNavigate();
   const [loginForm, setLoginForm] = useState({
     username: "",
@@ -20,7 +19,7 @@ function Login() {
   const [open, setOpen] = useState(false);
   const [alert, setAlert] = useState({ message: "", severity: "success" });
   const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem(LOCAL_STORAGE_KEY) ?? false
+    localStorage.getItem(loginForm.username) ?? false
   );
 
   // Filling login form
@@ -45,7 +44,7 @@ function Login() {
     // If login credential is valid
     else if (username === "John" && password === "12345") {
       setIsLoggedIn(!isLoggedIn);
-      localStorage.setItem(LOCAL_STORAGE_KEY, !isLoggedIn);
+      localStorage.setItem(loginForm.username, !isLoggedIn);
       navigate("/home");
     }
     // If login credential is invalid
