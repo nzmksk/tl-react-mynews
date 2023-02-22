@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
 import { useState } from "react";
+import DisplayResults from "./components/DisplayResults";
 import Header from "./components/Header";
 import MyFavoritesPanel from "./components/MyFavoritesPanel";
 
@@ -28,7 +29,9 @@ function Home() {
           <Grid className="left-panel-container" item lg={2.5}>
             <MyFavoritesPanel />
           </Grid>
-          <Grid className="result-container" item lg={9.5}></Grid>
+          <Grid className="result-container" item lg={9.5}>
+            <DisplayResults searchKeyword={searchKeyword} />
+          </Grid>
         </Grid>
       </Grid>
     </Grid>
