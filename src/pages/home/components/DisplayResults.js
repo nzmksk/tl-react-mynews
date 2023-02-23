@@ -1,5 +1,7 @@
+import NewsItem from "./NewsItem";
+
 function DisplayResults() {
-  return "Hello World";
+  return <NewsItem />
 }
 
 export default DisplayResults;
