@@ -21,3 +21,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.vs/VSWorkspaceState.json
+.vs/slnx.sqlite
+.vs/react-news-search/v17/.wsuo
+.vs/react-news-search/FileContentIndex/read.lock
+.vs/react-news-search/FileContentIndex/96f5c1e3-4edc-4848-b8bd-d153104630d4.vsidx
+.vs/ProjectSettings.json
