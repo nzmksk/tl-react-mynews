@@ -13,24 +13,26 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import img from "../../../images/SupraSono-01.png";
 
-function NewsItem() {
+function NewsItem(props) {
+  const { author, content, description, publishedAt, title, url, urlToImage } =
+    props.news;
+
   return (
     <Card sx={{ maxWidth: "300px" }}>
       <CardHeader
-        avatar={<Avatar>N</Avatar>}
+        avatar={<Avatar>{author}</Avatar>}
         action={
           <IconButton>
             <MoreVertIcon />
           </IconButton>
         }
-        title="News title"
-        subheader="Date published"
+        title={title}
+        subheader={publishedAt}
       />
-      <CardMedia component="img" image={img} />
+      <CardMedia component="img" src={urlToImage} />
       <CardContent>
-        <Typography>News details</Typography>
+        <Typography>{content}</Typography>
       </CardContent>
       <CardActions disableSpacing>
         <IconButton>
