@@ -11,17 +11,23 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
 function Login() {
-  const LOCAL_STORAGE_KEY = "USER";
+  const LOCAL_STORAGE_KEY = {
+    username: "username",
+    loginStatus: "isLoggedIn",
+  };
   const navigate = useNavigate();
   const [loginForm, setLoginForm] = useState({
     username: "",
     password: "",
   });
-  const [open, setOpen] = useState(false);
-  const [alert, setAlert] = useState({ message: "", severity: "success" });
   const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem(LOCAL_STORAGE_KEY) ?? false
+    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.loginStatus)) ?? false
   );
+  const [openMessage, setOpenMessage] = useState(false);
+  const [errorMessage, setErrorMessage] = useState({
+    message: "",
+    severity: "success",
+  });
 
   // Filling login form
   const handleFieldChange = (event) => {
@@ -39,19 +45,29 @@ function Login() {
 
     // If field is empty
     if (!username || !password) {
-      setOpen(true);
-      setAlert({ message: "Fields cannot be empty.", severity: "error" });
+      setOpenMessage(true);
+      setErrorMessage({
+        message: "Fields cannot be empty.",
+        severity: "error",
+      });
     }
     // If login credential is valid
     else if (username === "John" && password === "12345") {
       setIsLoggedIn(!isLoggedIn);
-      localStorage.setItem(LOCAL_STORAGE_KEY, !isLoggedIn);
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY.username,
+        JSON.stringify(username)
+      );
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY.loginStatus,
+        JSON.stringify(!isLoggedIn)
+      );
       navigate("/home");
     }
     // If login credential is invalid
     else {
-      setOpen(true);
-      setAlert({
+      setOpenMessage(true);
+      setErrorMessage({
         message: "Username and password do not match.",
         severity: "warning",
       });
@@ -60,8 +76,8 @@ function Login() {
 
   // Close alert message
   const handleClose = () => {
-    setOpen(false);
-    setAlert({ message: "", severity: "" });
+    setOpenMessage(false);
+    setErrorMessage({ message: "", severity: "" });
   };
 
   function SlideTransition(props) {
@@ -75,69 +91,67 @@ function Login() {
   // Otherwise, show the Login page
   else {
     return (
-      <div>
-        <Box
-          component="form"
-          method="post"
-          onSubmit={handleSubmit}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          margin="auto"
-          mt={5}
-          maxWidth={500}
-          borderRadius={5}
-          boxShadow="5px 5px 10px #ccc"
+      <Box
+        component="form"
+        method="post"
+        onSubmit={handleSubmit}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        margin="auto"
+        mt={5}
+        maxWidth={500}
+        borderRadius={5}
+        boxShadow="5px 5px 10px #ccc"
+      >
+        <Typography variant="h3" padding={2}>
+          MyNews
+        </Typography>
+        <TextField
+          label="Username"
+          name="username"
+          type="text"
+          variant="outlined"
+          size="small"
+          margin="dense"
+          value={loginForm.username}
+          onChange={handleFieldChange}
+        />
+        <TextField
+          label="Password"
+          name="password"
+          type="password"
+          variant="outlined"
+          size="small"
+          margin="dense"
+          value={loginForm.password}
+          onChange={handleFieldChange}
+        />
+        <Button
+          variant="contained"
+          size="medium"
+          type="submit"
+          sx={{ margin: "20px" }}
         >
-          <Typography variant="h3" padding={2}>
-            MyNews
-          </Typography>
-          <TextField
-            label="Username"
-            name="username"
-            type="text"
-            variant="outlined"
-            size="small"
-            margin="dense"
-            value={loginForm.username}
-            onChange={handleFieldChange}
-          />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            variant="outlined"
-            size="small"
-            margin="dense"
-            value={loginForm.password}
-            onChange={handleFieldChange}
-          />
-          <Button
-            variant="contained"
-            size="medium"
-            type="submit"
-            sx={{ margin: "20px" }}
-          >
-            Login
-          </Button>
-        </Box>
+          Login
+        </Button>
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          open={open}
-          autoHideDuration={6000}
+          open={openMessage}
+          autoHideDuration={5000}
           onClose={handleClose}
           TransitionComponent={SlideTransition}
         >
           <Alert
             onClose={handleClose}
-            severity={alert.severity}
+            severity={errorMessage.severity}
             sx={{ width: "100%" }}
           >
-            {alert.message}
+            {errorMessage.message}
           </Alert>
         </Snackbar>
-      </div>
+      </Box>
     );
   }
 }

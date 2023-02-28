@@ -11,15 +11,22 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
 function Header(props) {
+  const LOCAL_STORAGE_KEY = {
+    username: "username",
+    loginStatus: "isLoggedIn",
+  };
   const navigate = useNavigate();
-  const [username, setUsername] = useState("John");
+  const [username] = useState(
+    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.username)) ?? "Guest"
+  );
   const [isLoggedIn, setIsLoggedIn] = useState(
-    localStorage.getItem(username) ?? false
+    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.loginStatus)) ?? false
   );
 
   const logoutButtonHandler = () => {
-    setIsLoggedIn(!isLoggedIn);
-    localStorage.setItem(username, !isLoggedIn);
+    setIsLoggedIn(false);
+    localStorage.removeItem(LOCAL_STORAGE_KEY.username);
+    localStorage.setItem(LOCAL_STORAGE_KEY.loginStatus, JSON.stringify(false));
     navigate("/");
   };
 
@@ -47,7 +54,11 @@ function Header(props) {
           </IconButton>
         </Grid>
         <Grid item lg={3}>
-          <Chip label="Profile" avatar={<Avatar>J</Avatar>} color="primary" />
+          <Chip
+            label={username}
+            avatar={<Avatar>{username[0]}</Avatar>}
+            color="primary"
+          />
           <Button variant="contained" onClick={logoutButtonHandler}>
             Logout
           </Button>
