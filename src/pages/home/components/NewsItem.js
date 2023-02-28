@@ -15,24 +15,29 @@ import {
 } from "@mui/material";
 
 function NewsItem(props) {
-  const { author, content, description, publishedAt, title, url, urlToImage } =
-    props.news;
+  const { author, publishedAt, title, url, urlToImage } = props.news;
+
+  const publishedDate = publishedAt.slice(0, 10);
+
+  const redirectLink = () => {
+    window.open().location.href = url;
+  };
 
   return (
-    <Card sx={{ maxWidth: "300px" }}>
+    <Card sx={{ maxWidth: "200px" }} onClick={redirectLink}>
       <CardHeader
-        avatar={<Avatar>{author}</Avatar>}
+        avatar={<Avatar>{author[0]}</Avatar>}
         action={
           <IconButton>
             <MoreVertIcon />
           </IconButton>
         }
-        title={title}
-        subheader={publishedAt}
+        title={author}
+        subheader={publishedDate}
       />
       <CardMedia component="img" src={urlToImage} />
       <CardContent>
-        <Typography>{content}</Typography>
+        <Typography>{title}</Typography>
       </CardContent>
       <CardActions disableSpacing>
         <IconButton>

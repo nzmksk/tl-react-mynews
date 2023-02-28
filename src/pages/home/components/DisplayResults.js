@@ -1,3 +1,4 @@
+import { Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import NewsItem from "./NewsItem";
@@ -22,10 +23,14 @@ function DisplayResults() {
   }, []);
 
   const renderNewsItem = news.map((article) => {
-    return <NewsItem news={article} key={article.publishedAt} />;
+    return (
+      <Grid item>
+        <NewsItem news={article} key={article.url} />
+      </Grid>
+    );
   });
 
-  return <div>{renderNewsItem}</div>;
+  return <Grid container>{renderNewsItem}</Grid>;
 }
 
 export default DisplayResults;
