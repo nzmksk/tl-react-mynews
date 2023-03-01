@@ -23,6 +23,10 @@ function Header(props) {
     JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.loginStatus)) ?? false
   );
 
+  const searchBarHandler = (event) => {
+    props.searchKeywordHandler(event.target.value);
+  };
+
   const logoutButtonHandler = () => {
     setIsLoggedIn(false);
     localStorage.removeItem(LOCAL_STORAGE_KEY.username);
@@ -42,7 +46,7 @@ function Header(props) {
             type="search"
             size="small"
             value={props.searchKeyword}
-            onChange={props.searchKeywordHandler}
+            onChange={searchBarHandler}
           />
           <IconButton
             aria-label="Search news"

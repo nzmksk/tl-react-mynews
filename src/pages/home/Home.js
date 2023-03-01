@@ -7,8 +7,8 @@ import MyFavoritesPanel from "./components/MyFavoritesPanel";
 function Home() {
   const [searchKeyword, setSearchKeyword] = useState("");
 
-  const searchKeywordHandler = (event) => {
-    setSearchKeyword(event.target.value);
+  const searchKeywordHandler = (keyword) => {
+    setSearchKeyword(keyword);
   };
 
   return (
