@@ -14,8 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 
-function NewsItem(props) {
-  const { author, publishedAt, title, url, urlToImage } = props.news;
+function NewsItem({news}) {
+  const { author, publishedAt, title, url, urlToImage } = news;
 
   const publishedDate = publishedAt.slice(0, 10);
 

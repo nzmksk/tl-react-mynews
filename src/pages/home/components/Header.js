@@ -10,7 +10,7 @@ import { Search as SearchIcon } from "@mui/icons-material";
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 
-function Header(props) {
+function Header({ searchKeyword, searchKeywordHandler}) {
   const LOCAL_STORAGE_KEY = {
     username: "username",
     loginStatus: "isLoggedIn",
@@ -24,7 +24,7 @@ function Header(props) {
   );
 
   const searchBarHandler = (event) => {
-    props.searchKeywordHandler(event.target.value);
+    searchKeywordHandler(event.target.value);
   };
 
   const logoutButtonHandler = () => {
@@ -45,7 +45,7 @@ function Header(props) {
             label="Search for news"
             type="search"
             size="small"
-            value={props.searchKeyword}
+            value={searchKeyword}
             onChange={searchBarHandler}
           />
           <IconButton
