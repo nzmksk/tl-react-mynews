@@ -82,7 +82,7 @@ function DisplayResults({ pageNumber, searchKeyword }) {
   return (
     <Grid container>
       {renderNewsItem}
-      <Grid item>
+      <Grid item lg={12}>
         <Button
           variant="contained"
           size="medium"
