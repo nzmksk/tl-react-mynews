@@ -1,9 +1,9 @@
-import { Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import NewsItem from "./NewsItem";
 
-function DisplayResults({ searchKeyword }) {
+function DisplayResults({ pageNumber, searchKeyword }) {
   const [news, setNews] = useState([]);
 
   const newsParameter = {
@@ -41,19 +41,21 @@ function DisplayResults({ searchKeyword }) {
       "sports",
       "technology",
     ],
-    query: searchKeyword,
     pageSize: 20,
-    page: 1,
+  };
+
+  const loadMoreButtonHandler = () => {
+    pageNumber.current = pageNumber.current + 1;
   };
 
   const retrieveNews = async () => {
-    const { API_KEY, country, category, query, pageSize, page } = newsParameter;
+    const { API_KEY, country, category, pageSize } = newsParameter;
     let urlRequest;
 
     if (!searchKeyword) {
       urlRequest = `https://newsapi.org/v2/top-headlines?country=${country.Malaysia}&apiKey=${API_KEY}`;
     } else {
-      urlRequest = `https://newsapi.org/v2/top-headlines?q=${query}&apiKey=${API_KEY}`;
+      urlRequest = `https://newsapi.org/v2/top-headlines?q=${searchKeyword}&apiKey=${API_KEY}`;
     }
 
     try {
@@ -77,7 +79,26 @@ function DisplayResults({ searchKeyword }) {
     );
   });
 
-  return <Grid container>{renderNewsItem}</Grid>;
+  return (
+    <Grid container>
+      {renderNewsItem}
+      <Grid item>
+        <Button
+          variant="contained"
+          size="medium"
+          onClick={loadMoreButtonHandler}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "auto",
+          }}
+        >
+          Load More
+        </Button>
+      </Grid>
+    </Grid>
+  );
 }
 
 export default DisplayResults;
