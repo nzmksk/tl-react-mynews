@@ -26,7 +26,7 @@ function NewsItem({news}) {
   return (
     <Card sx={{ maxWidth: "200px" }} onClick={redirectLink}>
       <CardHeader
-        avatar={<Avatar>{author[0]}</Avatar>}
+        avatar={<Avatar>{author}</Avatar>}
         action={
           <IconButton>
             <MoreVertIcon />
