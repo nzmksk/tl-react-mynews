@@ -1,15 +1,20 @@
 import { Grid } from "@mui/material";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import DisplayResults from "./components/DisplayResults";
 import Header from "./components/Header";
 import MyFavoritesPanel from "./components/MyFavoritesPanel";
 
 function Home() {
   const [searchKeyword, setSearchKeyword] = useState("");
-  const page = useRef(1);
+  const [pageNumber, setPageNumber] = useState(1);
 
   const searchKeywordHandler = (keyword) => {
     setSearchKeyword(keyword);
+  };
+
+  const loadMoreButtonHandler = (event) => {
+    event.preventDefault();
+    setPageNumber(pageNumber + 1);
   };
 
   return (
@@ -31,7 +36,11 @@ function Home() {
             <MyFavoritesPanel />
           </Grid>
           <Grid className="result-container" item lg={9.5}>
-            <DisplayResults pageNumber={page} searchKeyword={searchKeyword} />
+            <DisplayResults
+              pageNumber={pageNumber}
+              searchKeyword={searchKeyword}
+              loadMoreButtonHandler={loadMoreButtonHandler}
+            />
           </Grid>
         </Grid>
       </Grid>

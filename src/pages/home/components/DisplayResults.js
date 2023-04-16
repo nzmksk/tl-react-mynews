@@ -1,10 +1,11 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Grid, LinearProgress } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import NewsItem from "./NewsItem";
 
-function DisplayResults({ pageNumber, searchKeyword }) {
+function DisplayResults({ loadMoreButtonHandler, pageNumber, searchKeyword }) {
   const [news, setNews] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const newsParameter = {
     API_KEY: process.env.REACT_APP_API_KEY,
@@ -41,52 +42,59 @@ function DisplayResults({ pageNumber, searchKeyword }) {
       "sports",
       "technology",
     ],
-    pageSize: 20,
   };
 
-  const loadMoreButtonHandler = () => {
-    pageNumber.current = pageNumber.current + 1;
-  };
-
-  const retrieveNews = async () => {
-    const { API_KEY, country, category, pageSize } = newsParameter;
-    let urlRequest;
-
-    if (!searchKeyword) {
-      urlRequest = `https://newsapi.org/v2/top-headlines?country=${country.Malaysia}&apiKey=${API_KEY}`;
-    } else {
-      urlRequest = `https://newsapi.org/v2/top-headlines?q=${searchKeyword}&apiKey=${API_KEY}`;
-    }
-
-    try {
-      const response = await axios.get(urlRequest);
-      const newsArray = response.data.articles;
-      setNews(newsArray);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { API_KEY, country } = newsParameter;
 
   useEffect(() => {
-    retrieveNews();
-  }, []);
+    setIsLoading(true);
 
-  const renderNewsItem = news.map((article) => {
+    setTimeout(() => {
+      const retrieveNews = async () => {
+        const url =
+          searchKeyword === ""
+            ? `https://newsapi.org/v2/top-headlines?country=${country.Malaysia}&pageSize=8&page=${pageNumber}&apiKey=${API_KEY}`
+            : `https://newsapi.org/v2/top-headlines?language=en&q=${searchKeyword}&pageSize=8&page=${pageNumber}&apiKey=${API_KEY}`;
+
+        await axios
+          .get(url)
+          .then((response) => {
+            const data = response.data.articles;
+            setNews([...news, ...data]);
+            setIsLoading(false);
+          })
+          .catch((error) => {
+            setIsLoading(false);
+            console.error(error);
+          });
+      };
+      retrieveNews();
+    }, 1000);
+  }, [pageNumber, searchKeyword]);
+
+  const filterNews = news.filter((article) => {
+    return article.title.toLowerCase().includes(searchKeyword.toLowerCase());
+  });
+
+  const renderNewsItem = filterNews.map((article, index) => {
     return (
-      <Grid item>
-        <NewsItem news={article} key={article.url} />
+      <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+        <NewsItem news={article} />
       </Grid>
     );
   });
 
   return (
-    <Grid container>
-      {renderNewsItem}
+    <>
+      {isLoading && <LinearProgress />}
+      <Grid container>{renderNewsItem}</Grid>
       <Grid item lg={12}>
         <Button
           variant="contained"
           size="medium"
-          onClick={loadMoreButtonHandler}
+          onClick={(event) => {
+            loadMoreButtonHandler(event);
+          }}
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -97,7 +105,7 @@ function DisplayResults({ pageNumber, searchKeyword }) {
           Load More
         </Button>
       </Grid>
-    </Grid>
+    </>
   );
 }
 
